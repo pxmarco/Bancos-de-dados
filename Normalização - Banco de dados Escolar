@@ -1,0 +1,102 @@
+CREATE DATABASE AULA;
+USE AULA;
+
+CREATE TABLE Original(
+AlunoID int,
+NomeAluno varchar(20),
+TurmaID varchar(10),
+NomeTurma varchar(20),
+NomeProfessor varchar(20),
+Disciplina varchar(20));
+
+INSERT INTO Original (AlunoID, NomeAluno, TurmaID, NomeTurma, NomeProfessor, Disciplina)
+VALUES 
+(1, "Alice", "T101", "Matemática", "Sr. Silva", "Álgebra"),
+(1, "Alice", "T101", "Matemática", "Sr. Silva", "Geometria"),
+(2, "Bob", "T102", "Ciências", "Sr. Souza", "Física"),
+(2, "Bob", "T102", "Ciências", "Sr. Souza", "Química");
+
+SELECT * FROM Original;
+
+CREATE TABLE Aluno(
+IDAluno int primary key,
+AlunoNome varchar(20));
+
+CREATE TABLE Turma(
+IDTurma varchar(10) primary key,
+TurmaNome varchar(20),
+ProfessorNome varchar(20));
+
+CREATE TABLE Disciplina (
+  DisciplinaID INT PRIMARY KEY,
+  NomeDisciplina VARCHAR(50)
+);
+
+CREATE TABLE Turma_Disciplina (
+  FOREIGN KEY (IDTurma) REFERENCES Turma(IDTurma),
+  FOREIGN KEY (DisciplinaID) REFERENCES Disciplina(DisciplinaID));
+
+CREATE TABLE Aluno_Turma (
+  IDAluno INT,
+  IDTurma VARCHAR(10),
+  PRIMARY KEY (IDAluno, IDTurma),
+  FOREIGN KEY (IDAluno) REFERENCES Aluno(IDAluno),
+  FOREIGN KEY (IDTurma) REFERENCES Turma(IDTurma));
+
+INSERT INTO Aluno (IDAluno, AlunoNome)
+VALUES
+(1, "Alice"),
+(2, "Bob");
+
+INSERT INTO Turma (IDTurma, TurmaNome, ProfessorNome)
+VALUES
+("T101", "Matemática", "Sr. Silva"),
+("T102", "Ciências", "Sra. Souza");
+
+INSERT INTO Disciplina (DisciplinaID, NomeDisciplina) 
+VALUES
+(1, "Álgebra"),
+(2, "Geometria"),
+(3, "Física"),
+(4, "Química");
+
+INSERT INTO Turma_Disciplina (IDTurma, DisciplinaID) 
+VALUES
+("T101", 1),
+("T101", 2), 
+("T102", 3), 
+("T102", 4); 
+
+INSERT INTO Aluno_Turma (IDAluno, IDTurma) 
+VALUES
+(1, 'T101'),
+(2, 'T102');
+
+SELECT 
+  a.IDAluno as AlunoID,
+  a.AlunoNome as NomeAluno,
+  t.IDTurma as TurmaID,
+  t.TurmaNome as NomeTurma,
+  t.ProfessorNome as NomeProfessor,
+  d.NomeDisciplina as Disciplina
+FROM Aluno a
+JOIN Aluno_Turma att ON a.IDAluno = att.IDAluno
+JOIN Turma t ON att.IDTurma = t.IDTurma
+JOIN Turma_Disciplina td ON t.IDTurma = td.IDTurma
+JOIN Disciplina d ON td.DisciplinaID = d.DisciplinaID;
+
+create table Desnorm (
+aluno_ID int,
+nome_aluno varchar (20),
+turma_ID char(5),
+nome_turma varchar (20),
+nome_professor varchar(20),
+disciplina varchar (20));
+
+insert into Desnorm (aluno_ID, nome_aluno, turma_ID, nome_turma,nome_professor, disciplina)
+values (1, 'Alice', 'T101', 'Matemática', 'Sr. Silva', 'Álgebra'),
+(1, 'Alice', 'T101', 'Matemática', 'Sr. Silva', 'Geometria'),
+(2, 'Bob', 'T102', 'Ciências', 'Sra. Souza', 'Física'),
+(2, 'Bob', 'T102', 'Ciências', 'Sra. Souza', 'Química');
+
+SELECT * FROM Desnorm
